@@ -110,7 +110,15 @@ if (!process.env.OPENAI_API_KEY) {
 }
 
 // Middleware
-app.use(cors()); // Enables Cross-Origin Resource Sharing (for frontend to talk to backend)
+app.use(cors({
+  origin: process.env.FRONTEND_URL
+    ? process.env.FRONTEND_URL.split(',').map(url => url.trim())
+    : ['http://localhost:3000'],
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS', 'HEAD'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'Accept', 'Origin', 'X-Requested-With']
+}));
+
 app.use(express.json()); // Parses incoming JSON requests
 
 // Initialize OpenAI client
